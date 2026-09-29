@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("WorkingDaysUtil")
 class WorkingDaysUtilTest {
@@ -42,6 +43,17 @@ class WorkingDaysUtilTest {
         void deveIgnorarDiasInformados() {
             LocalDate start = LocalDate.of(2026, 9, 25);
             LocalDate end = LocalDate.of(2026, 9, 26);
+
+            long result = WorkingDaysUtil.count(start, end);
+
+            assertEquals(15, result);
+        }
+
+        @Test
+        @DisplayName("Deve ignorar a ordem dos dias quando pertencem ao mesmo mês")
+        void deveIgnorarOrdemDosDiasNoMesmoMes() {
+            LocalDate start = LocalDate.of(2026, 9, 25);
+            LocalDate end = LocalDate.of(2026, 9, 1);
 
             long result = WorkingDaysUtil.count(start, end);
 
@@ -124,6 +136,45 @@ class WorkingDaysUtilTest {
             long result = WorkingDaysUtil.count(start, end);
 
             assertEquals(15, result);
+        }
+    }
+
+    @Nested
+    @DisplayName("Outros cenários")
+    class OutrosCenários {
+
+        @Test
+        @DisplayName("Deve lançar exceção quando a data inicial for nula")
+        void deveLancarExcecaoQuandoDataInicialForNula() {
+            LocalDate end = LocalDate.of(2026, 9, 30);
+
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> WorkingDaysUtil.count(null, end)
+            );
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção quando a data final for nula")
+        void deveLancarExcecaoQuandoDataFinalForNula() {
+            LocalDate start = LocalDate.of(2026, 9, 1);
+
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> WorkingDaysUtil.count(start, null)
+            );
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção quando o mês final for anterior ao inicial")
+        void deveLancarExcecaoQuandoMesFinalForAnterior() {
+            LocalDate start = LocalDate.of(2026, 10, 10);
+            LocalDate end = LocalDate.of(2026, 9, 20);
+
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> WorkingDaysUtil.count(start, end)
+            );
         }
     }
 }

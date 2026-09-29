@@ -1,6 +1,10 @@
 package br.com.teste;
 
-public class TripleTroubleUtil {
+public final class TripleTroubleUtil {
+
+    private TripleTroubleUtil() {
+    }
+
     public static int tripleDouble(long num1, long num2) {
         String numero1 = String.valueOf(num1);
         String numero2 = String.valueOf(num2);

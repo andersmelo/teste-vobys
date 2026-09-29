@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("FactorialUtil")
 class FactorialUtilTest {
@@ -39,10 +40,9 @@ class FactorialUtilTest {
     }
 
     @Test
-    @DisplayName("Deve retornar zero para número negativo")
-    void deveRetornarZeroParaNumeroNegativo() {
-        int result = FactorialUtil.zeros(-10);
-
-        assertEquals(0, result);
+    @DisplayName("Deve lançar exceção quando o número de entrada for negativo")
+    void deveLancarExcecaoParaNumerosNegativos() {
+        assertThrows(IllegalArgumentException.class, () -> FactorialUtil.zeros(-1));
     }
+
 }

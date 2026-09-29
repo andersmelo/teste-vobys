@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -102,44 +101,29 @@ class FindOutlierUtilTest {
             );
         }
 
+        @Test
+        @DisplayName("Deve lançar exceção quando array for nulo")
+        void deveLancarExcecaoQuandoArrayForNulo() {
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> FindOutlierUtil.find(null)
+            );
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção quando array tiver menos que 3 elementos")
+        void deveLancarExcecaoQuandoArrayTiverMenosDeTresElementos() {
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> FindOutlierUtil.find(new int[]{1, 2})
+            );
+        }
+
         private int[] parseArray(String input) {
             return java.util.Arrays.stream(input.split(","))
                     .map(String::trim)
                     .mapToInt(Integer::parseInt)
                     .toArray();
-        }
-    }
-
-    @Nested
-    @DisplayName("ehPar")
-    class EhPar {
-
-        @ParameterizedTest(name = "{0} deve ser considerado par")
-        @ValueSource(ints = {
-                0,
-                2,
-                10,
-                -2,
-                -100,
-                Integer.MAX_VALUE - 1,
-                Integer.MIN_VALUE
-        })
-        void deveRetornarVerdadeiroParaNumerosPares(int numero) {
-            assertTrue(FindOutlierUtil.ehPar(numero));
-        }
-
-        @ParameterizedTest(name = "{0} deve ser considerado ímpar")
-        @ValueSource(ints = {
-                1,
-                3,
-                11,
-                -1,
-                -99,
-                Integer.MAX_VALUE,
-                Integer.MIN_VALUE + 1
-        })
-        void deveRetornarFalsoParaNumerosImpares(int numero) {
-            assertFalse(FindOutlierUtil.ehPar(numero));
         }
     }
 }

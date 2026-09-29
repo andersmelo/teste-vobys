@@ -2,14 +2,35 @@ package br.com.teste;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 
-public class WorkingDaysUtil {
+public final class WorkingDaysUtil {
+
+    private WorkingDaysUtil() {
+    }
 
     public static long count(final LocalDate start, final LocalDate end) {
+        if (start == null || end == null) {
+            throw new IllegalArgumentException("Start e End não podem ser nulas");
+        }
 
-        LocalDate primeiraSegunda = start.withDayOfMonth(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
-        LocalDate ultimaSexta = end.with(TemporalAdjusters.lastDayOfMonth()).with(TemporalAdjusters.previousOrSame(DayOfWeek.FRIDAY));
+        YearMonth inicioDoMes = YearMonth.from(start);
+        YearMonth fimDoMes = YearMonth.from(end);
+
+        if (fimDoMes.isBefore(inicioDoMes)) {
+            throw new IllegalArgumentException(
+                    "O mês final não pode ser anterior ao mês inicial"
+            );
+        }
+
+        LocalDate primeiraSegunda = inicioDoMes
+                .atDay(1)
+                .with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+
+        LocalDate ultimaSexta = fimDoMes
+                .atEndOfMonth()
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.FRIDAY));
 
         long diasUteis = 0;
 
